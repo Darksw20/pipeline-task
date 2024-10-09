@@ -1,5 +1,6 @@
 const express = require('express');
 const { config } = require('dotenv');
+const routes = require('./routes');
 
 // init dotenv config
 config();
@@ -10,9 +11,7 @@ const port = process.env.PORT || 3000;
 
 // middleware
 app.use(express.json());
-
-// test get
-app.get('/', (req, res) => res.json({ msg: 'Hello' }));
+app.use(routes);
 
 // listen
 app.listen(port, () => {
