@@ -1,0 +1,12 @@
+@baseUrl = localhost:3001
+
+POST http://{{baseUrl}}/transactions
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "currency": "USD",
+    "amount": 100.00,
+    "price_per_unit": 10.00,
+    "total_price": 1000.00
+}
