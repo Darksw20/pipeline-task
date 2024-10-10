@@ -1,0 +1,7 @@
+###
+POST http://localhost:3000/fee-transaction
+Content-Type: application/json
+
+{
+    "monto": 300
+}

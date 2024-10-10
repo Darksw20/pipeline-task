@@ -1,8 +1,7 @@
 const express = require("express");
 const { config } = require("dotenv");
-
-// init dotenv config
 config();
+const routes = require("./routes/fee_transformation");
 
 // variables
 const app = express();
@@ -12,6 +11,8 @@ app.use(express.json());
 
 // test get
 app.get("/", (req, res) => res.json({ msg: "Hello" }));
+
+app.use(routes);
 
 // listen
 app.listen(process.env.PORT || 3000, () => {
