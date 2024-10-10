@@ -224,30 +224,53 @@
 					e.preventDefault();
 					const formData = new FormData(authForm);
 					const data = Object.fromEntries(formData.entries());
-					data.isLogin = isLogin;
-
-					fetch("/api/auth", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(data),
-					})
-						.then((response) => response.json())
-						.then((data) => {
-							console.log("Éxito:", data);
-							if (data.sessionId) {
-								setCookie("sessionId", data.sessionId, 1);
-								modal.style.display = "none";
-								sessionId = data.sessionId;
-							}
+					if (!isLogin) {
+						fetch("/api/signUp", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
 						})
-						.catch((error) => {
-							console.error("Error:", error);
-							alert(
-								"Hubo un error en la autenticación. Por favor, intente de nuevo."
-							);
-						});
+							.then((response) => response.json())
+							.then((data) => {
+								console.log("Éxito:", data);
+								if (data.sessionId) {
+									setCookie("sessionId", data.sessionId, 1);
+									modal.style.display = "none";
+									sessionId = data.sessionId;
+								}
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+								alert(
+									"Hubo un error en la autenticación. Por favor, intente de nuevo."
+								);
+							});
+					} else {
+						fetch("/api/login", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
+						})
+							.then((response) => response.json())
+							.then((data) => {
+								console.log("Éxito:", data);
+								if (data.sessionId) {
+									setCookie("sessionId", data.sessionId, 1);
+									modal.style.display = "none";
+									sessionId = data.sessionId;
+								}
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+								alert(
+									"Hubo un error en la autenticación. Por favor, intente de nuevo."
+								);
+							});
+					}
 				};
 
 				form.addEventListener("submit", function (e) {
