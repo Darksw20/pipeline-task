@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Endpoint para convertir BTC a USD/EUR/GBP
 app.post("/convert", async (req, res) => {
-  const { amount, currency } = req.body;
+  const { amount, currency, token } = req.body;
 
   if (!amount || !currency) {
     return res.status(400).json({ error: "Amount and currency are required." });
@@ -18,13 +18,15 @@ app.post("/convert", async (req, res) => {
     const response = await axios.get(`https://api.coindesk.com/v1/bpi/currentprice/${currency}.json`);
     
     const rate = response.data.bpi[currency].rate_float;
-    const convertedAmount = amount * rate;
+    const costCurrency = amount * rate;
 
+    
     res.json({
       amount,
       currency,
-      convertedAmount,
-      rate,
+      token,
+      costCurrency,
+    //   rate,
     });
   } catch (error) {
     console.error(error);
