@@ -3,9 +3,8 @@ const transactionController = require('../controllers/transaction-controller');
 
 // router.get('/prueba', transactionController.prueba);
 
-router.get('/', (req, res) => {
-  res.send(`Transaction get`);
-});
+//Historial de transacciones.
+router.get('/', transactionController.getTransactions);
 
 router.post('/', transactionController.createTransaction);
 
