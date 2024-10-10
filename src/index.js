@@ -15,7 +15,7 @@ app.post("/convert", async (req, res) => {
 
   try {
     // Llamar a la API de CoinDesk usando la URL desde el archivo .env
-    const response = await axios.get(`${process.env.API_URL}/${currency}.json`);
+    const response = await axios.get(`https://api.coindesk.com/v1/bpi/currentprice/${currency}.json`);
     
     const rate = response.data.bpi[currency].rate_float;
     const convertedAmount = amount * rate;
