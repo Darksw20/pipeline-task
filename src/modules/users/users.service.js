@@ -1,49 +1,46 @@
 /** Handle logic and DB connnection */
-
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'username',
-  database: 'database_name',
-  password: 'password',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const database = require("../../config/database");
 
 class UsersService {
-  getHello() {
-    return { message: "Hello" };
-  }
-
+  /**
+   * Creates a new user
+   * @param {*} username
+   * @param {*} password
+   * @param {*} email
+   * @returns The user created
+   */
   async createUser(username, password, email) {
-    const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
+    const query =
+      "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
     try {
-      const [result] = await pool.query(query, [username, password, email]);
-      const userId = result.insertId;
-      return this.findUserById(userId);
+      const [result, fields] = await database.query(query, [
+        username,
+        password,
+        email,
+      ]);
+      return {
+        created: result.insertId,
+      };
     } catch (err) {
-      throw new Error(err.message);
+      console.error(err);
     }
   }
 
-  async findUserByUsername(username) {
-    const query = 'SELECT * FROM users WHERE username = ?';
-    try {
-      const [rows] = await pool.query(query, [username]);
-      return rows[0];
-    } catch (err) {
-      throw new Error(err.message);
-    }
-  }
+  /**
+   * Finds a unique user by querying based on the unique fields and values
+   * @param  {...any} fieldValues Objects in the form of {name: 'field', value: 'value'}
+   * @returns The found user
+   */
+  async findWhereUnique(...fieldValues) {
+    let fieldValuesQuery = fieldValues.map(({ name, value }, idx) => {
+      return `${idx > 0 ? "AND" : ""} ${name}='${value}'`;
+    });
+    let sql = `SELECT id, username, password, email FROM users WHERE ${fieldValuesQuery.join(
+      " "
+    )} LIMIT 1`;
 
-  async findUserById(userId) {
-    const query = 'SELECT * FROM users WHERE id = ?';
-    try {
-      const [rows] = await pool.query(query, [userId]);
-      return rows[0];
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    const [result, fields] = await database.query(sql);
+    return result[0];
   }
 }
 
