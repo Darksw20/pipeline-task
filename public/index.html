@@ -159,6 +159,7 @@
 				const authTitle = document.getElementById("authTitle");
 				const nameField = document.getElementById("nameField");
 				let isLogin = true;
+				ip_address = "10.0.0.0";
 
 				function setCookie(name, value, days) {
 					let expires = "";
@@ -225,7 +226,7 @@
 					const formData = new FormData(authForm);
 					const data = Object.fromEntries(formData.entries());
 					if (!isLogin) {
-						fetch("/api/signUp", {
+						fetch(`${ip_address}/register`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
@@ -248,7 +249,7 @@
 								);
 							});
 					} else {
-						fetch("/api/login", {
+						fetch(`${ip_address}/login`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
