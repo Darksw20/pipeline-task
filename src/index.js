@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Endpoint para convertir BTC a USD/EUR/GBP
 app.post("/convert", async (req, res) => {
-  const { amount, currency, token } = req.body;
+  const { amount, currency } = req.body;
 
   if (!amount || !currency) {
     return res.status(400).json({ error: "Amount and currency are required." });
@@ -23,7 +23,6 @@ app.post("/convert", async (req, res) => {
     const taxComputationIP = "54.165.107.93:3000/fee-transaction";
 
     const callbackResponse = await axios.post(`http://${taxComputationIP}`, {
-      token,
       amount,
       currency,
       monto,
