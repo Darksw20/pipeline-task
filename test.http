@@ -1,0 +1,31 @@
+POST http://3.19.237.123:3000/auth/login
+content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
+
+###
+POST http://3.19.237.123:3000/auth/register
+content-type: application/json
+
+{
+    "name": "test",
+    "email": "test@test.com",
+    "password": "test"
+}
+
+###
+POST http://3.19.237.123:3000/auth/authenticate
+content-type: application/json
+Set-Cookie: session_token=6c499f1f-f02f-4086-a5ee-88e137951cfb; Path=/; HttpOnly
+
+{
+    "amount": "200",
+    "currency": "USD",
+    "crypto": "BTC"
+}
+
+###
+GET http://52.54.206.246:3001/transactions?user_id=4;

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const path = require("path");
 const { config } = require("dotenv");
 
@@ -7,9 +8,11 @@ config();
 
 // variables
 const app = express();
+app.use(cors());
 
 // middleware
 app.use(express.json());
+
 
 // Serve static HTML file
 app.use(express.static(path.join(__dirname, "../public")));

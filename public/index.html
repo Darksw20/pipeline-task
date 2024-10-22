@@ -159,7 +159,7 @@
 				const authTitle = document.getElementById("authTitle");
 				const nameField = document.getElementById("nameField");
 				let isLogin = true;
-				ip_address = "10.0.0.0";
+				ip_address = "http://3.19.237.123:3000";
 
 				function setCookie(name, value, days) {
 					let expires = "";
@@ -226,7 +226,7 @@
 					const formData = new FormData(authForm);
 					const data = Object.fromEntries(formData.entries());
 					if (!isLogin) {
-						fetch(`${ip_address}/register`, {
+						fetch(`${ip_address}/auth/register`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
@@ -249,20 +249,21 @@
 								);
 							});
 					} else {
-						fetch(`${ip_address}/login`, {
+						fetch(`${ip_address}/auth/login`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
 							},
 							body: JSON.stringify(data),
 						})
-							.then((response) => response.json())
+							.then((response) => {
+								console.log(response);
+								return response.json();
+							})
 							.then((data) => {
 								console.log("Éxito:", data);
-								if (data.sessionId) {
-									setCookie("sessionId", data.sessionId, 1);
-									modal.style.display = "none";
-									sessionId = data.sessionId;
+								if (data.session_token) {
+									document.cookie = `sessionId=${data.session_token}`;
 								}
 							})
 							.catch((error) => {
@@ -276,23 +277,28 @@
 
 				form.addEventListener("submit", function (e) {
 					e.preventDefault();
-					if (!sessionId) {
-						modal.style.display = "block";
-						return;
-					}
+					// if (!sessionId) {
+					// 	modal.style.display = "block";
+					// 	return;
+					// }
 					const formData = new FormData(form);
 					const data = Object.fromEntries(formData.entries());
 					data.crypto = "BTC";
+					sessionId = document.cookie.split("=")[1];
 
-					fetch("/api/buy-bitcoin", {
+					console.log(sessionId);
+					fetch(`${ip_address}/auth/authenticate`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							"X-Session-ID": sessionId,
+							session_token: sessionId,
 						},
 						body: JSON.stringify(data),
 					})
-						.then((response) => response.json())
+						.then((response) => {
+							console.log(response);
+							return response.json();
+						})
 						.then((data) => {
 							console.log("Éxito:", data);
 							alert("Compra de Bitcoin exitosa!");
