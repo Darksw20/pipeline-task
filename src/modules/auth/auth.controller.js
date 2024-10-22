@@ -33,7 +33,8 @@ class AuthController {
    * @param {*} res
    */
   async authenticate(req, res) {
-    const { session_token } = req.body;
+    const { amount, currency, crypto } = req.body;
+    const session_token = req.cookies.session_token;
     const isValid = await authService.authenticate(session_token);
     if (!isValid) {
       res.cookie.clear("session_token");
@@ -42,8 +43,12 @@ class AuthController {
         message: "Invalid session",
       });
     } else {
+      const response = await fetch("http://52.90.240.234:8080/convert", {
+        method: "POST",
+        body: JSON.stringify({ amount, currency, crypto }),
+      });
       res.json({
-        authenticated: isValid,
+        response,
       });
     }
   }
