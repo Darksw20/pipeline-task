@@ -7,31 +7,40 @@ app.use(express.json());
 
 // Endpoint para convertir BTC a USD/EUR/GBP
 app.post("/convert", async (req, res) => {
-  const { amount, currency } = req.body;
+  const { amount, currency, user_id } = req.body;
 
   if (!amount || !currency) {
     return res.status(400).json({ error: "Amount and currency are required." });
   }
+
+	console.log("Llega peticion");
+	console.log(req);
 
   try {
     // Llamar a la API de CoinDesk usando la URL desde el archivo .env
     const response = await axios.get(`https://api.coindesk.com/v1/bpi/currentprice/${currency}.json`);
     
     const rate = response.data.bpi[currency].rate_float;
-    const monto = amount * rate;
+    const btc_amount = amount * rate;
 
     const taxComputationIP = "54.165.107.93:3000/fee-transaction";
 
     const callbackResponse = await axios.post(`http://${taxComputationIP}`, {
-      amount,
+      amount:btc_amount,
       currency,
-      monto,
+      user_id
     });
-    
-    res = callbackResponse;
+    console.log("regresa");
+    const res1 = callbackResponse;
+    console.log(res1);
+
+    return res.json({
+	    message: "Trancascción Creada Exitosamente",
+	    transactionData: callbackResponse.data
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "An error occurred while fetching data." });
+    res.json({ error: "An error occurred while fetching data." });
   }
 });
 
