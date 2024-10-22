@@ -18,7 +18,7 @@ app.post("/convert", async (req, res) => {
     const response = await axios.get(`https://api.coindesk.com/v1/bpi/currentprice/${currency}.json`);
     
     const rate = response.data.bpi[currency].rate_float;
-    const costCurrency = amount * rate;
+    const monto = amount * rate;
 
     const taxComputationIP = "54.165.107.93:3000/fee-transaction";
 
@@ -26,7 +26,7 @@ app.post("/convert", async (req, res) => {
       token,
       amount,
       currency,
-      costCurrency,
+      monto,
     });
     
     res = callbackResponse;
