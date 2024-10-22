@@ -20,14 +20,16 @@ app.post("/convert", async (req, res) => {
     const rate = response.data.bpi[currency].rate_float;
     const costCurrency = amount * rate;
 
-    
-    res.json({
+    const taxComputationIP = "54.165.107.93:3000/fee-transaction";
+
+    const callbackResponse = await axios.post(`http://${taxComputationIP}`, {
+      token,
       amount,
       currency,
-      token,
       costCurrency,
-    //   rate,
     });
+    
+    res = callbackResponse;
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while fetching data." });
