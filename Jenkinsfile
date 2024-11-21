@@ -3,11 +3,11 @@ pipeline {
 
 
     stages {
-        stage('Checkout') {
-            steps {
-                sh 'git pull'
-            }
-        }
+        //stage('Checkout') {
+        //    steps {
+        //        sh 'git pull'
+        //    }
+        //}
 
         stage('Install Dependencies') {
             steps {
