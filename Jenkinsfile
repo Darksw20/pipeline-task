@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh: 'git pull'
+                sh 'git pull'
             }
         }
 
